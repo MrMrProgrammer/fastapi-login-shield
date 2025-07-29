@@ -16,9 +16,15 @@ def get_client_ip(request: Request) -> str:
 
 
 class LoginShieldMiddleware(BaseHTTPMiddleware):
-    def __init__(self, app, login_path: str = "/login"):
+    def __init__(
+        self,
+        app,
+        login_path: str = "/login",
+        expire_seconds: int = 900
+    ):
         super().__init__(app)
         self.login_path = login_path
+        self.expire_seconds = expire_seconds
         self.ip_attempts = {}
         self.ip_attempts_lock = asyncio.Lock()
 
@@ -30,20 +36,29 @@ class LoginShieldMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
 
         ip = get_client_ip(request)
+        now = time.time()
 
         async with self.ip_attempts_lock:
+            self.ip_attempts = {
+                ip_key: info
+                for ip_key, info in self.ip_attempts.items()
+                if now - info["last_ts"] < self.expire_seconds
+            }
+
             info = self.ip_attempts.get(ip, {"count": 0, "last_ts": 0})
 
             if info["count"] >= 3:
                 delay = self.get_delay(info["count"])
-                now = time.time()
                 remaining_delay = delay - (now - info["last_ts"])
                 if remaining_delay > 0:
                     retry_after = max(1, int(remaining_delay))
                     return JSONResponse(
                         status_code=429,
                         content={
-                            "detail": f"Too many login attempts. Try again in {retry_after} seconds."
+                            "detail": (
+                                "Too many login attempts. Try again in "
+                                f"{retry_after} seconds."
+                            )
                         },
                         headers={"Retry-After": str(retry_after)},
                     )

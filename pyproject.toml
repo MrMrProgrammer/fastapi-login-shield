@@ -1,21 +1,42 @@
 [project]
 name = "fastapi-login-shield"
-version = "0.1.7"
-description = "Protect FastAPI login endpoints from brute-force attacks"
-authors = [
-    { name = "MrMrProgrammer", email = "mrmrprogrammer@gmail.com" }
-]
-license = { text = "MIT" }
+version = "0.1.9"
+description = "Protect FastAPI login endpoints from brute-force attacks using middleware"
 readme = "README.md"
 requires-python = ">=3.7"
+license = { text = "MIT" }
+
+authors = [
+    { name = "Seyed Mohammadreza Hashemi", email = "mrmrprogrammer@gmail.com" }
+]
+maintainers = [
+    { name = "MrMrProgrammer", email = "mrmrprogrammer@gmail.com" }
+]
+
+keywords = [
+    "fastapi", "middleware", "brute-force", "security", "rate-limiter", "login-protection"
+]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Framework :: FastAPI",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 3 - Alpha",
+    "Topic :: Security",
+    "Topic :: Internet :: WWW/HTTP :: HTTP Servers",
+]
+
 dependencies = [
     "fastapi >=0.95.0",
     "starlette >=0.27.0"
 ]
 
 [project.urls]
-Homepage = "https://github.com/MrMrProgrammer/fastapi-login-shield"
+Homepage = "https://mrmrprogrammer.ir"
+Documentation = "https://github.com/MrMrProgrammer/fastapi-login-shield#readme"
 Repository = "https://github.com/MrMrProgrammer/fastapi-login-shield"
+Issues = "https://github.com/MrMrProgrammer/fastapi-login-shield/issues"
 
 [build-system]
 requires = ["hatchling"]
